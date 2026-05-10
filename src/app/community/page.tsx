@@ -112,7 +112,7 @@ export default function CommunityPage() {
               <div className="bg-white/60 backdrop-blur border border-brand-dusty-pink/30 p-6 rounded-2xl flex gap-4 items-start shadow-soft">
                 <CheckCircle className="text-brand-burgundy shrink-0 mt-1" size={24} />
                 <p className="font-body font-medium text-brand-espresso italic">
-                  "Satu-satunya cara untuk mengatasi rasa takut berbicara adalah dengan terus berbicara di lingkungan yang tepat."
+                  &quot;Satu-satunya cara untuk mengatasi rasa takut berbicara adalah dengan terus berbicara di lingkungan yang tepat.&quot;
                 </p>
               </div>
             </motion.div>

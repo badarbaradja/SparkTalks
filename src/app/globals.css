@@ -1,0 +1,26 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --color-primary: #6A0B23;
+  --color-primary-dark: #560B18;
+  --color-primary-deep: #3B010B;
+  --color-bg: #F5EFE8;
+  --color-accent: #D7B2B7;
+  --color-text: #221516;
+  --color-base: #FAF8F6;
+  --color-support: #BFA18A;
+  --color-gold: #F2D9A0;
+}
+
+body {
+  color: var(--color-text);
+  background: var(--color-bg);
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+}

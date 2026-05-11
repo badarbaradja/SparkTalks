@@ -1,57 +1,36 @@
-import { google } from "googleapis";
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from 'next/server'
 
-export async function POST(req: Request) {
+export async function POST(request: NextRequest) {
   try {
-    const body = await req.json();
-    const { fullName, age, domisili, instagram, tiktok, pekerjaan, goals, program, expectations } = body;
-
-    // Cek konfigurasi ENV
-    if (!process.env.GOOGLE_SERVICE_ACCOUNT_EMAIL || !process.env.GOOGLE_PRIVATE_KEY || !process.env.GOOGLE_SHEET_ID) {
-      console.warn("Spreadsheet credentials not found in .env.local. Skipping sheet insertion.");
-      return NextResponse.json({ success: true, message: "Mock success (Missing ENV variables)" });
+    const body = await request.json()
+    console.log('=== REGISTER API CALLED ===')
+    console.log('Body received:', JSON.stringify({
+      ...body,
+      paymentProof: body.paymentProof ? '[FILE PRESENT]' : null
+    }))
+    
+    const gasUrl = process.env.NEXT_PUBLIC_GAS_URL
+    console.log('GAS URL:', gasUrl ? 'PRESENT' : 'MISSING')
+    
+    if (!gasUrl) {
+      return NextResponse.json({ error: 'GAS URL not configured' }, { status: 500 })
     }
 
-    // Otentikasi Google Service Account
-    const auth = new google.auth.GoogleAuth({
-      credentials: {
-        client_email: process.env.GOOGLE_SERVICE_ACCOUNT_EMAIL,
-        private_key: process.env.GOOGLE_PRIVATE_KEY.replace(/\\n/g, "\n"),
-      },
-      scopes: [
-        "https://www.googleapis.com/auth/spreadsheets",
-      ],
-    });
+    console.log('Sending to GAS...')
+    const response = await fetch(gasUrl, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(body),
+      redirect: 'follow',
+    })
 
-    const sheets = google.sheets({ auth, version: "v4" });
+    console.log('GAS response status:', response.status)
+    const result = await response.text()
+    console.log('GAS response body:', result)
 
-    // Masukkan data ke dalam Spreadsheet
-    // Format Kolom: Waktu | Nama | Umur | Domisili | Instagram | TikTok | Pekerjaan | Program | Goals | Expectations
-    await sheets.spreadsheets.values.append({
-      spreadsheetId: process.env.GOOGLE_SHEET_ID,
-      range: "Sheet1!A:J", // Pastikan nama Sheet di Google Sheets adalah "Sheet1"
-      valueInputOption: "USER_ENTERED",
-      requestBody: {
-        values: [
-          [
-            new Date().toLocaleString("id-ID", { timeZone: "Asia/Jakarta" }), // Timestamp
-            fullName,
-            age,
-            domisili,
-            instagram,
-            tiktok || "-",
-            pekerjaan,
-            program,
-            goals,
-            expectations || "-",
-          ],
-        ],
-      },
-    });
-
-    return NextResponse.json({ success: true });
-  } catch (error: unknown) {
-    console.error("Error writing to spreadsheet:", error);
-    return NextResponse.json({ success: false, error: error instanceof Error ? error.message : "Unknown error" }, { status: 500 });
+    return NextResponse.json({ success: true })
+  } catch (error) {
+    console.error('=== REGISTER API ERROR ===', error)
+    return NextResponse.json({ error: String(error) }, { status: 500 })
   }
 }

@@ -97,7 +97,7 @@ export default function FounderSection() {
               </div>
               <div className="absolute inset-0 bg-brand-espresso/60 flex items-center justify-center p-6 text-center backdrop-blur-sm">
                 <p className="font-heading text-xl md:text-2xl text-white font-medium max-w-sm">
-                  Experienced in <span className="text-brand-dusty-pink font-bold">50+ events</span> as a speaker and moderator.
+                  Experienced in <span className="text-brand-dusty-pink font-bold">50+ events</span> as a speaker, MC, and moderator.
                 </p>
               </div>
             </motion.div>

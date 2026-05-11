@@ -30,9 +30,9 @@ export const teamMembers = [
     desc: "Ensuring smooth operations and participant registration flows."
   },
   {
-    name: "Bima Arya",
+    name: "Badar Zaki Baradja",
     role: "IT & Website Support",
-    initials: "BA",
+    initials: "BZ",
     desc: "Maintaining the digital platform and learning management systems."
   }
 ];
